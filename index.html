@@ -1,647 +1,1524 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enartis Engineering Points Program</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #f2f2f2; font-family: 'Nunito', sans-serif; }
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button { opacity: 1; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air Mixing Intensity Guide — Enartis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  (function(){
+    function loadScript(urls, cb){
+      var i = 0;
+      function tryNext(){
+        if (i >= urls.length) { cb(new Error('All CDNs failed for ' + urls[0])); return; }
+        var s = document.createElement('script');
+        s.src = urls[i++];
+        s.crossOrigin = 'anonymous';
+        s.onload = function(){ cb(null); };
+        s.onerror = tryNext;
+        document.head.appendChild(s);
+      }
+      tryNext();
+    }
+    window.__loadReact = function(done){
+      loadScript([
+        'https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js',
+        'https://unpkg.com/react@18.3.1/umd/react.production.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js'
+      ], function(err){
+        if (err) { done(err); return; }
+        loadScript([
+          'https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js',
+          'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js'
+        ], done);
+      });
+    };
+  })();
+  </script>
+<style>
+  :root {
+    /* Enartis brand */
+    --blue: #0076BD;
+    --blue-deep: #154E85;
+    --blue-soft: #E5F1F9;
+    --red: #D10019;
+    --red-soft: #FBE5E8;
+    --teal: #4EBFB3;
+    --teal-deep: #1A8C78;
+    --teal-soft: #E4F5F2;
+
+```
+/* Surfaces */
+--paper: #FFFFFF;
+--surface: #F2F2F2;
+--surface-2: #F8F9FA;
+
+/* Text */
+--ink: #1A1A1A;
+--ink-2: #3D4852;
+--muted: #6E7781;
+
+/* Lines */
+--line: #E1E4E8;
+--line-soft: #EEF0F2;
+
+/* Type */
+--font-heading: 'Montserrat', 'Century Gothic', sans-serif;
+--font-body: 'Open Sans', sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+```
+
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+background: var(–surface);
+color: var(–ink);
+font-family: var(–font-body);
+font-size: 14px;
+line-height: 1.5;
+-webkit-font-smoothing: antialiased;
+}
+
+body { min-height: 100vh; }
+
+/* HEADER */
+.header {
+background: white;
+border-bottom: 1px solid var(–line);
+box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+.header-inner {
+max-width: 1400px;
+margin: 0 auto;
+padding: 18px 28px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 24px;
+flex-wrap: wrap;
+}
+.brand {
+display: flex;
+flex-direction: column;
+gap: 2px;
+}
+.brand-logo {
+height: 48px;
+width: auto;
+display: block;
+}
+.brand-tag {
+font-family: var(–font-heading);
+font-size: 10px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.18em;
+color: var(–teal-deep);
+margin-top: 8px;
+padding-left: 2px;
+}
+.header-title {
+font-family: var(–font-heading);
+font-size: 14px;
+font-weight: 500;
+color: var(–ink-2);
+text-align: center;
+flex: 1;
+min-width: 200px;
+}
+.project-input {
+background: white;
+border: 1px solid var(–line);
+color: var(–ink);
+padding: 9px 14px;
+border-radius: 4px;
+font-family: var(–font-body);
+font-size: 13px;
+min-width: 240px;
+transition: all 0.15s ease;
+}
+.project-input::placeholder { color: var(–muted); }
+.project-input:focus {
+outline: none;
+border-color: var(–blue);
+box-shadow: 0 0 0 3px rgba(0,118,189,0.12);
+}
+
+/* LAYOUT */
+.container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 28px;
+display: grid;
+grid-template-columns: 360px 1fr;
+gap: 28px;
+}
+@media (max-width: 960px) {
+.container { grid-template-columns: 1fr; padding: 18px; gap: 18px; }
+.header-inner { padding: 14px 18px; }
+.header-title { display: none; }
+}
+
+.accent-block {
+position: relative;
+padding-left: 14px;
+}
+.accent-block::before {
+content: ‘’;
+position: absolute;
+left: 0;
+top: 4px;
+bottom: 4px;
+width: 4px;
+background: var(–teal);
+border-radius: 2px;
+}
+
+/* CONFIGURATOR */
+.configurator {
+background: white;
+border: 1px solid var(–line);
+border-radius: 6px;
+padding: 24px;
+align-self: start;
+position: sticky;
+top: 20px;
+}
+@media (max-width: 960px) { .configurator { position: static; } }
+
+.config-title {
+font-family: var(–font-heading);
+font-size: 16px;
+font-weight: 700;
+color: var(–blue-deep);
+margin-bottom: 2px;
+text-transform: uppercase;
+letter-spacing: 0.04em;
+}
+.config-sub {
+font-size: 11px;
+color: var(–muted);
+margin-bottom: 22px;
+text-transform: uppercase;
+letter-spacing: 0.12em;
+font-family: var(–font-heading);
+font-weight: 500;
+}
+
+.field { margin-bottom: 20px; }
+.label {
+display: block;
+font-family: var(–font-heading);
+font-size: 11px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(–ink-2);
+margin-bottom: 8px;
+}
+.select, .text-input {
+width: 100%;
+padding: 10px 12px;
+border: 1px solid var(–line);
+border-radius: 4px;
+background: white;
+font-family: var(–font-body);
+font-size: 14px;
+color: var(–ink);
+transition: border-color 0.15s;
+}
+.select:focus, .text-input:focus {
+outline: none;
+border-color: var(–blue);
+box-shadow: 0 0 0 3px rgba(0,118,189,0.12);
+}
+
+/* SEGMENTED CONTROL */
+.segmented {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+background: var(–surface);
+border: 1px solid var(–line);
+border-radius: 4px;
+padding: 3px;
+gap: 2px;
+}
+.seg-btn {
+border: none;
+background: transparent;
+padding: 9px 6px;
+font-family: var(–font-heading);
+font-size: 12px;
+font-weight: 600;
+color: var(–muted);
+cursor: pointer;
+border-radius: 3px;
+transition: all 0.15s;
+text-transform: uppercase;
+letter-spacing: 0.04em;
+}
+.seg-btn:hover { color: var(–blue-deep); }
+.seg-btn.active {
+background: var(–blue);
+color: white;
+box-shadow: 0 1px 2px rgba(0,118,189,0.25);
+}
+
+/* TANK STATS */
+.tank-stats {
+background: var(–surface-2);
+border: 1px solid var(–line);
+border-radius: 4px;
+padding: 14px;
+margin-top: 10px;
+}
+.tank-stat-row {
+display: flex;
+justify-content: space-between;
+align-items: baseline;
+padding: 4px 0;
+font-size: 13px;
+}
+.tank-stat-row + .tank-stat-row { border-top: 1px solid var(–line-soft); margin-top: 4px; padding-top: 8px; }
+.tank-stat-label {
+color: var(–muted);
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+font-family: var(–font-heading);
+font-weight: 500;
+}
+.tank-stat-val { font-family: var(–font-mono); font-weight: 500; color: var(–blue-deep); font-size: 13px; }
+
+/* RECIPE HEADER */
+.recipe-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-end;
+margin-bottom: 18px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(–line);
+gap: 16px;
+flex-wrap: wrap;
+}
+.recipe-title {
+font-family: var(–font-heading);
+font-size: 22px;
+font-weight: 700;
+color: var(–blue-deep);
+line-height: 1.15;
+letter-spacing: -0.01em;
+}
+.recipe-subtitle {
+font-size: 13px;
+color: var(–muted);
+margin-top: 6px;
+font-family: var(–font-body);
+}
+.summary-stats {
+display: flex;
+gap: 22px;
+}
+.stat {
+text-align: right;
+}
+.stat-label {
+font-family: var(–font-heading);
+font-size: 10px;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: var(–muted);
+font-weight: 600;
+}
+.stat-value {
+font-family: var(–font-heading);
+font-size: 22px;
+font-weight: 700;
+color: var(–blue);
+margin-top: 4px;
+line-height: 1;
+}
+.stat-value .unit {
+font-size: 12px;
+color: var(–muted);
+font-weight: 500;
+margin-left: 3px;
+font-family: var(–font-body);
+}
+
+/* TIMELINE */
+.timeline {
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+gap: 6px;
+margin-bottom: 20px;
+padding: 14px;
+background: white;
+border: 1px solid var(–line);
+border-radius: 4px;
+}
+.timeline-bar {
+height: 6px;
+background: var(–surface);
+border-radius: 3px;
+overflow: hidden;
+}
+.timeline-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–teal), var(–blue));
+border-radius: 3px;
+}
+.timeline-label {
+font-family: var(–font-heading);
+font-size: 9px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(–ink-2);
+margin-top: 7px;
+text-align: center;
+font-weight: 600;
+}
+.timeline-hours {
+font-family: var(–font-mono);
+font-size: 11px;
+color: var(–blue-deep);
+text-align: center;
+margin-top: 2px;
+font-weight: 500;
+}
+
+/* PHASE CARDS */
+.phases {
+display: grid;
+gap: 12px;
+}
+.phase {
+background: white;
+border: 1px solid var(–line);
+border-radius: 6px;
+overflow: hidden;
+transition: all 0.2s;
+}
+.phase.modified {
+border-color: var(–teal);
+box-shadow: 0 0 0 3px rgba(78,191,179,0.12);
+}
+.phase-head {
+display: flex;
+align-items: center;
+gap: 14px;
+padding: 13px 18px;
+background: var(–blue);
+color: white;
+}
+.phase-num {
+font-family: var(–font-heading);
+font-size: 22px;
+font-weight: 800;
+color: white;
+line-height: 1;
+min-width: 32px;
+opacity: 0.4;
+}
+.phase-name-block { flex: 1; }
+.phase-name {
+font-family: var(–font-heading);
+font-size: 16px;
+font-weight: 700;
+letter-spacing: -0.005em;
+}
+.phase-meta {
+font-family: var(–font-heading);
+font-size: 10px;
+color: rgba(255,255,255,0.7);
+text-transform: uppercase;
+letter-spacing: 0.12em;
+margin-top: 2px;
+font-weight: 500;
+}
+.phase-modified-badge {
+background: var(–teal);
+color: white;
+font-family: var(–font-heading);
+font-size: 9px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+padding: 4px 8px;
+border-radius: 3px;
+margin-right: 6px;
+}
+.phase-reset {
+background: rgba(255,255,255,0.15);
+border: 1px solid rgba(255,255,255,0.25);
+color: white;
+padding: 5px 10px;
+border-radius: 3px;
+font-size: 11px;
+font-family: var(–font-body);
+font-weight: 500;
+cursor: pointer;
+transition: all 0.15s;
+}
+.phase-reset:hover { background: rgba(255,255,255,0.25); }
+
+.phase-body {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 0;
+}
+@media (max-width: 720px) {
+.phase-body { grid-template-columns: repeat(2, 1fr); }
+}
+
+.phase-cell {
+padding: 14px;
+border-right: 1px solid var(–line-soft);
+border-bottom: 1px solid var(–line-soft);
+}
+.phase-cell:last-child { border-right: none; }
+@media (max-width: 720px) {
+.phase-cell:nth-child(even) { border-right: none; }
+}
+
+.cell-label {
+font-family: var(–font-heading);
+font-size: 10px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(–muted);
+font-weight: 600;
+margin-bottom: 6px;
+}
+.cell-input {
+font-family: var(–font-mono);
+font-size: 15px;
+font-weight: 500;
+color: var(–blue-deep);
+background: var(–surface-2);
+border: 1px solid var(–line);
+border-radius: 3px;
+padding: 6px 8px;
+width: 100%;
+transition: all 0.15s;
+}
+.cell-input:focus {
+outline: none;
+border-color: var(–blue);
+background: white;
+box-shadow: 0 0 0 3px rgba(0,118,189,0.12);
+}
+.cell-suffix {
+font-size: 10px;
+color: var(–muted);
+margin-top: 4px;
+font-family: var(–font-body);
+}
+
+/* INTENSITY BUTTONS */
+.intensity-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 3px;
+}
+.intensity-btn {
+border: 1px solid var(–line);
+background: var(–surface-2);
+padding: 6px 4px;
+border-radius: 3px;
+font-family: var(–font-heading);
+font-size: 10px;
+font-weight: 600;
+cursor: pointer;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.04em;
+transition: all 0.15s;
+}
+.intensity-btn:hover {
+border-color: var(–blue);
+color: var(–blue-deep);
+}
+.intensity-btn.active {
+background: var(–teal);
+border-color: var(–teal);
+color: white;
+}
+.intensity-btn[data-level=“Intense”].active {
+background: var(–red);
+border-color: var(–red);
+}
+
+/* FOOTER ACTIONS */
+.actions {
+display: flex;
+gap: 10px;
+margin-top: 24px;
+padding-top: 20px;
+border-top: 1px solid var(–line);
+flex-wrap: wrap;
+}
+.btn {
+padding: 11px 20px;
+border-radius: 4px;
+font-family: var(–font-heading);
+font-size: 12px;
+font-weight: 600;
+cursor: pointer;
+border: 1px solid transparent;
+transition: all 0.15s;
+text-transform: uppercase;
+letter-spacing: 0.04em;
+}
+.btn-primary {
+background: var(–blue);
+color: white;
+border-color: var(–blue);
+}
+.btn-primary:hover { background: var(–blue-deep); border-color: var(–blue-deep); }
+.btn-secondary {
+background: white;
+color: var(–blue);
+border-color: var(–blue);
+}
+.btn-secondary:hover { background: var(–blue-soft); }
+.btn-danger {
+background: white;
+color: var(–red);
+border-color: var(–line);
+margin-left: auto;
+}
+.btn-danger:hover { background: var(–red); color: white; border-color: var(–red); }
+
+/* TOAST */
+.toast {
+position: fixed;
+bottom: 24px;
+left: 50%;
+transform: translateX(-50%);
+background: var(–blue-deep);
+color: white;
+padding: 12px 24px;
+border-radius: 4px;
+font-family: var(–font-body);
+font-size: 13px;
+font-weight: 500;
+box-shadow: 0 4px 12px rgba(21,78,133,0.25);
+z-index: 1000;
+animation: toastIn 0.2s ease;
+}
+@keyframes toastIn {
+from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* DOC FOOTER */
+.doc-footer {
+text-align: center;
+padding: 32px 24px 40px;
+color: var(–muted);
+font-size: 12px;
+border-top: 1px solid var(–line);
+margin-top: 40px;
+background: white;
+}
+.doc-footer .accent-text {
+font-family: var(–font-heading);
+font-weight: 700;
+color: var(–blue-deep);
+}
+.doc-footer .winegrid-tease {
+margin-top: 8px;
+font-style: italic;
+color: var(–teal-deep);
+font-family: var(–font-body);
+}
+
+/* PRINT */
+@media print {
+@page { size: letter; margin: 0.5in; }
+body { background: white; }
+.header { box-shadow: none; border-bottom: 2px solid var(–blue); }
+.header-inner { padding: 0 0 12px 0; }
+.brand-logo { height: 36px; }
+.project-input { background: transparent; border: none; padding: 0; min-width: auto; }
+.header-title { display: none; }
+.configurator, .actions, .phase-reset, .phase-modified-badge, .toast { display: none !important; }
+.container { display: block; padding: 0; max-width: none; }
+.recipe-header { page-break-after: avoid; }
+.timeline { border: 1px solid #888; }
+.phase {
+page-break-inside: avoid;
+border: 1px solid #888;
+margin-bottom: 8px;
+}
+.phase-head {
+background: white !important;
+color: var(–blue-deep) !important;
+border-bottom: 1px solid #888;
+}
+.phase-num { color: var(–red) !important; opacity: 1 !important; }
+.phase-name { color: var(–blue-deep) !important; }
+.phase-meta { color: #666 !important; }
+.cell-input {
+background: white;
+border: none;
+padding: 0;
+font-size: 13px;
+}
+.intensity-btn { display: none; }
+.intensity-btn.active {
+display: block;
+background: white !important;
+color: var(–blue-deep) !important;
+border: 1px solid var(–blue) !important;
+font-weight: 700;
+}
+.doc-footer { display: block; border-top: 1px solid #888; padding-top: 12px; margin-top: 24px; background: none; }
+.winegrid-tease { display: none; }
+.print-only { display: block !important; }
+}
+.print-only { display: none; }
+.print-only.signature {
+margin-top: 20px;
+display: flex;
+gap: 40px;
+font-size: 12px;
+}
+.signature-line {
+flex: 1;
+border-top: 1px solid #888;
+padding-top: 4px;
+font-family: var(–font-heading);
+font-size: 10px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(–muted);
+}
+
+</style>
 </head>
 <body>
-  <div id="root"></div>
+<div id="root"></div>
 
-  <script type="text/babel">
-    const { useState, useMemo } = React;
-
-    // ─── Data ────────────────────────────────────────────────────────────────────
-    const PRODUCT_GROUPS = [
-      { id: "enzymes",       name: "Enzymes",                  category: "standard",  defaultGM: 0.45 },
-      { id: "yeast",         name: "Yeast",                    category: "standard",  defaultGM: 0.45 },
-      { id: "nutrients",     name: "Nutrients",                category: "standard",  defaultGM: 0.45 },
-      { id: "yeast_deriv",   name: "Yeast Derivatives",        category: "standard",  defaultGM: 0.45 },
-      { id: "fining",        name: "Fining Agents",            category: "standard",  defaultGM: 0.45 },
-      { id: "mlf",           name: "Malolactic Fermentation",  category: "standard",  defaultGM: 0.45 },
-      { id: "oak",           name: "Oak Alternatives",         category: "standard",  defaultGM: 0.45 },
-      { id: "tannins",       name: "Tannins",                  category: "standard",  defaultGM: 0.45 },
-      { id: "stabilization", name: "Stabilization",            category: "standard",  defaultGM: 0.45 },
-      { id: "so2",           name: "SO\u2082 Products",        category: "commodity", defaultGM: 0.30 },
-      { id: "tartaric",      name: "Tartaric Acid",            category: "commodity", defaultGM: 0.30 },
-      { id: "citric",        name: "Citric Acid",              category: "commodity", defaultGM: 0.30 },
-      { id: "bentonite",     name: "Bentonite",                category: "commodity", defaultGM: 0.30 },
-    ];
-
-    // ─── Equipment List ───────────────────────────────────────────────────────────
-    // No prices or margins here — all entered manually:
-    //   • Retail prices: Deal Setup → Equipment card
-    //   • Equipment costs (landed): Internal → Total Deal GM card
-    const EQUIPMENT_LIST = [
-      { id: "cm1000",   name: "CellarMate 1000 Plus Propagator", vendor: "Parsec" },
-      { id: "cm3000",   name: "CellarMate 3000 Plus Propagator", vendor: "Parsec" },
-      { id: "muse4",    name: "MU.SE 4.0",                       vendor: "Parsec" },
-      { id: "evo2ferm", name: "EVO2FERM",                        vendor: "Parsec" },
-      { id: "dts100",   name: "DT Flotation Pump \u2013 100hL",  vendor: "Della Toffola" },
-      { id: "dts300",   name: "DT Flotation Pump \u2013 300hL",  vendor: "Della Toffola" },
-      { id: "dts500",   name: "DT Flotation Pump \u2013 500hL",  vendor: "Della Toffola" },
-      { id: "mox1",     name: "Dainese MOx 1 Dose",              vendor: "Dainese" },
-      { id: "mox2",     name: "Dainese MOx 2 Dose",              vendor: "Dainese" },
-      { id: "mox5",     name: "Dainese MOx 5 Dose",              vendor: "Dainese" },
-      { id: "tc",       name: "Tartarcheck Plus",                 vendor: "Exacta" },
-      { id: "wp1100",   name: "Winegrid WP1100",                  vendor: "Winegrid" },
-      { id: "bp1011",   name: "Winegrid BarrelPlus BP1011",       vendor: "Winegrid" },
-      { id: "smartbox", name: "Winegrid SmartBox 2.0",            vendor: "Winegrid" },
-    ];
-
-    const POINTS_RATES = { standard: 0.5, commodity: 0.2 };
-
-    // ─── Default multiples: min 1.2, target 1.5 ──────────────────────────────────
-    const SETTINGS_DEFAULTS = { minMultiple: 1.2, targetMultiple: 1.5, useTaxRate: 0.0925, escalationThreshold: 30000 };
-
-    const C = {
-      blue: "#0076BD", blueDark: "#005a91", blueLight: "#e8f4fb",
-      red: "#D10019", teal: "#4EBFB3",
-      black: "#1a1a1a", g90: "#2d2d2d", g70: "#555", g50: "#888", g30: "#b0b0b0", g15: "#d9d9d9", g05: "#f2f2f2", white: "#fff",
-      ok: "#2a8a42", okBg: "#edf7ef", warn: "#c47a00", warnBg: "#fef8eb", fail: "#c42020", failBg: "#fef0f0"
-    };
-
-    const fmt  = n => (n == null || isNaN(n)) ? "—" : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
-    const fmtN = n => new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(n);
-    const fmtPct = n => (n * 100).toFixed(1) + "%";
-    const uid  = () => Math.random().toString(36).slice(2, 9);
-
-    // ─── Shared style objects ─────────────────────────────────────────────────────
-    const F = "'Nunito', sans-serif";
-    const inp = { background: C.white, border: `1px solid ${C.g15}`, color: C.black, padding: "8px 12px", borderRadius: 4, fontSize: 13, fontFamily: F, width: "100%", boxSizing: "border-box", outline: "none" };
-    const sel = { ...inp, appearance: "none", backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", paddingRight: 30 };
-    const crd  = { background: C.white, border: `1px solid ${C.g15}`, borderRadius: 6, padding: 20, marginBottom: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" };
-    const lbl  = { fontSize: 10, color: C.g50, fontFamily: F, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600, marginBottom: 4, display: "block" };
-    const dBtn = { background: "none", border: `1px dashed ${C.g15}`, color: C.g50, padding: "6px 16px", borderRadius: 4, fontSize: 12, fontFamily: F, cursor: "pointer" };
-    const xBtn = { background: "none", border: "none", color: C.g30, cursor: "pointer", fontSize: 16, padding: 0 };
-
-    // ─── Sub-components ───────────────────────────────────────────────────────────
-    function PointsBar({ earned, target, label }) {
-      const pct = target > 0 ? Math.min(earned / target, 1) : 0;
-      const over = earned >= target;
-      return (
-        <div style={{ marginBottom: 14 }}>
-          {label && <div style={{ fontSize: 11, color: C.g50, marginBottom: 4, fontFamily: F }}>{label}</div>}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ flex: 1, height: 8, background: C.g05, borderRadius: 4, overflow: "hidden" }}>
-              <div style={{ width: `${pct * 100}%`, height: "100%", borderRadius: 4, background: over ? `linear-gradient(90deg, ${C.teal}, ${C.ok})` : `linear-gradient(90deg, ${C.blue}, ${C.blueDark})`, transition: "width 0.6s ease" }} />
-            </div>
-            <span style={{ fontFamily: F, fontSize: 12, fontWeight: 600, color: over ? C.ok : C.blue, minWidth: 44, textAlign: "right" }}>{(pct * 100).toFixed(0)}%</span>
-          </div>
-        </div>
-      );
+<script>
+window.__loadReact(function(err){
+  if (err){
+    document.getElementById('root').innerHTML =
+      '<div style="font-family:sans-serif;padding:40px;text-align:center;color:#6D2E46">' +
+      '<h2>Could not load React</h2>' +
+      '<p>This page requires internet access to load React from a CDN.</p>' +
+      '<p style="font-size:12px;color:#888">' + (err && err.message ? err.message : '') + '</p>' +
+      '</div>';
+    return;
+  }
+const {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect
+} = React;
+const GRAPES = [{
+  id: 'cab_sauv',
+  name: 'Cabernet Sauvignon',
+  skin: 'robust'
+}, {
+  id: 'cab_franc',
+  name: 'Cabernet Franc',
+  skin: 'robust'
+}, {
+  id: 'merlot',
+  name: 'Merlot',
+  skin: 'robust'
+}, {
+  id: 'tempranillo',
+  name: 'Tempranillo',
+  skin: 'robust'
+}, {
+  id: 'petit_verdot',
+  name: 'Petit Verdot',
+  skin: 'robust'
+}, {
+  id: 'malbec',
+  name: 'Malbec',
+  skin: 'robust'
+}, {
+  id: 'grenache',
+  name: 'Grenache',
+  skin: 'sensitive'
+}, {
+  id: 'pinot_noir',
+  name: 'Pinot Noir',
+  skin: 'sensitive'
+}, {
+  id: 'sangiovese',
+  name: 'Sangiovese',
+  skin: 'sensitive'
+}, {
+  id: 'gamay',
+  name: 'Gamay',
+  skin: 'sensitive'
+}, {
+  id: 'other_robust',
+  name: 'Other — Robust skin',
+  skin: 'robust'
+}, {
+  id: 'other_sensitive',
+  name: 'Other — Sensitive skin',
+  skin: 'sensitive'
+}];
+const GOALS = [{
+  id: 'gentle',
+  name: 'Gentle',
+  desc: 'Soft tannin profile'
+}, {
+  id: 'high',
+  name: 'High',
+  desc: 'Maximum extraction'
+}, {
+  id: 'color',
+  name: 'Color',
+  desc: 'Pigment-focused'
+}];
+const TANK_SIZES = [{
+  id: 'small',
+  label: '50 to 150 hl',
+  type: 'Small',
+  ratio: '<1',
+  fill: '80-85%',
+  pressure: 2.5
+}, {
+  id: 'medium',
+  label: '150 to 400 hl',
+  type: 'Medium',
+  ratio: '1',
+  fill: '75-85%',
+  pressure: 3.0
+}, {
+  id: 'big',
+  label: '400 to 800 hl',
+  type: 'Big',
+  ratio: '1.5',
+  fill: '70-85%',
+  pressure: 3.5
+}, {
+  id: 'huge',
+  label: '800 to 2,000 hl',
+  type: 'Huge',
+  ratio: '2',
+  fill: '70-85%',
+  pressure: 4.0
+}, {
+  id: 'oversize',
+  label: '2,000 to 5,000 hl',
+  type: 'Over size',
+  ratio: '3',
+  fill: '65-80%',
+  pressure: 4.5
+}];
+const INTENSITY_HZ = {
+  Low: [1, 3, 5, 8, 11],
+  Medium: [2, 4, 6, 9, 12],
+  High: [3, 5, 7, 10, 13],
+  Intense: [4, 6, 8, 11, 14]
+};
+const PHASE_NAMES = ['Cold Soak', 'Growth', 'Vmax', 'Plateau', 'Slow Down', 'End AF'];
+const PHASE_LATIN = ['Latency', 'Onset', 'Peak', 'Sustain', 'Decline', 'Finish'];
+const PROTOCOLS = {
+  'robust_gentle': {
+    label: 'Robust Skin · Gentle Extraction',
+    desc: 'Cab Sauv, Cab Franc, Merlot, Tempranillo, Petit Verdot, Malbec',
+    phases: [{
+      duration: 0,
+      temp: 20,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 2
+    }, {
+      duration: 24,
+      temp: 24,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 8
+    }, {
+      duration: 12,
+      temp: 26,
+      macroOx: 1,
+      macroOxHours: 24,
+      intensity: 'High',
+      hz: 6
+    }, {
+      duration: 30,
+      temp: 30,
+      macroOx: 1,
+      macroOxHours: 24,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 40,
+      temp: 28,
+      macroOx: 0.5,
+      macroOxHours: 24,
+      intensity: 'Low',
+      hz: 4
+    }, {
+      duration: 48,
+      temp: 26,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 3
+    }]
+  },
+  'robust_high': {
+    label: 'Robust Skin · High Extraction',
+    desc: 'Cab Sauv, Cab Franc, Merlot, Tempranillo, Petit Verdot, Malbec',
+    phases: [{
+      duration: 0,
+      temp: 20,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 2
+    }, {
+      duration: 24,
+      temp: 24,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 12,
+      temp: 28,
+      macroOx: 1,
+      macroOxHours: 24,
+      intensity: 'Intense',
+      hz: 8
+    }, {
+      duration: 30,
+      temp: 30,
+      macroOx: 1,
+      macroOxHours: 24,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 40,
+      temp: 30,
+      macroOx: 0.5,
+      macroOxHours: 24,
+      intensity: 'Medium',
+      hz: 5
+    }, {
+      duration: 48,
+      temp: 26,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 4
+    }]
+  },
+  'robust_color': {
+    label: 'Robust Skin · Color Extraction',
+    desc: 'Cab Sauv, Cab Franc, Merlot, Tempranillo, Petit Verdot, Malbec',
+    phases: [{
+      duration: 0,
+      temp: 28,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 2
+    }, {
+      duration: 24,
+      temp: 30,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'High',
+      hz: 8
+    }, {
+      duration: 12,
+      temp: 28,
+      macroOx: 2,
+      macroOxHours: 24,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 36,
+      temp: 26,
+      macroOx: 1,
+      macroOxHours: 24,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 36,
+      temp: 26,
+      macroOx: 0.5,
+      macroOxHours: 24,
+      intensity: 'Low',
+      hz: 4
+    }, {
+      duration: 48,
+      temp: 24,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 4
+    }]
+  },
+  'sensitive_gentle': {
+    label: 'Sensitive Skin · Gentle Extraction',
+    desc: 'Grenache, Pinot Noir, Sangiovese, Gamay',
+    phases: [{
+      duration: 0,
+      temp: 22,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'None',
+      hz: 2
+    }, {
+      duration: 24,
+      temp: 24,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 12,
+      temp: 27,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 8
+    }, {
+      duration: 30,
+      temp: 26,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 4
+    }, {
+      duration: 36,
+      temp: 25,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 4
+    }, {
+      duration: 48,
+      temp: 22,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 2
+    }]
+  },
+  'sensitive_high': {
+    label: 'Sensitive Skin · High Extraction',
+    desc: 'Grenache, Pinot Noir, Sangiovese, Gamay',
+    phases: [{
+      duration: 0,
+      temp: 22,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'None',
+      hz: 2
+    }, {
+      duration: 24,
+      temp: 26,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 5
+    }, {
+      duration: 12,
+      temp: 30,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'High',
+      hz: 8
+    }, {
+      duration: 30,
+      temp: 30,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 36,
+      temp: 26,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 4
+    }, {
+      duration: 48,
+      temp: 24,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 2
+    }]
+  },
+  'sensitive_color': {
+    label: 'Sensitive Skin · Color Extraction',
+    desc: 'Grenache, Pinot Noir, Sangiovese, Gamay',
+    phases: [{
+      duration: 0,
+      temp: 26,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'Low',
+      hz: 2
+    }, {
+      duration: 24,
+      temp: 30,
+      macroOx: 0,
+      macroOxHours: 0,
+      intensity: 'High',
+      hz: 6
+    }, {
+      duration: 12,
+      temp: 28,
+      macroOx: 2,
+      macroOxHours: 24,
+      intensity: 'Medium',
+      hz: 6
+    }, {
+      duration: 30,
+      temp: 26,
+      macroOx: 1,
+      macroOxHours: 30,
+      intensity: 'Medium',
+      hz: 4
+    }, {
+      duration: 40,
+      temp: 25,
+      macroOx: 1,
+      macroOxHours: 48,
+      intensity: 'Low',
+      hz: 4
+    }, {
+      duration: 48,
+      temp: 24,
+      macroOx: 0.5,
+      macroOxHours: 48,
+      intensity: 'Low',
+      hz: 2
+    }]
+  }
+};
+function hzFor(intensity, tankSizeId) {
+  if (intensity === 'None') return 0;
+  const idx = TANK_SIZES.findIndex(t => t.id === tankSizeId);
+  return INTENSITY_HZ[intensity]?.[idx] ?? 0;
+}
+function Header({
+  projectName,
+  setProjectName
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "header-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "FA_Logo_Enartis_ENGINEERING_RGB.png",
+    alt: "Enartis Engineering",
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "brand-tag"
+  }, "Air Mixing \xB7 Intensity Guide")), /*#__PURE__*/React.createElement("div", {
+    className: "header-title"
+  }, "SAEn 5000 Protocol Composer"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "project-input",
+    placeholder: "Project name (e.g. Block 7 Cab \u2014 T4)",
+    value: projectName,
+    onChange: e => setProjectName(e.target.value)
+  })));
+}
+function Configurator({
+  config,
+  setConfig,
+  tank
+}) {
+  const update = (k, v) => setConfig({
+    ...config,
+    [k]: v
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    className: "configurator"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "accent-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "config-title"
+  }, "Configure"), /*#__PURE__*/React.createElement("div", {
+    className: "config-sub"
+  }, "Inputs drive the recipe")), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Grape variety"), /*#__PURE__*/React.createElement("select", {
+    className: "select",
+    value: config.grapeId,
+    onChange: e => update('grapeId', e.target.value)
+  }, GRAPES.map(g => /*#__PURE__*/React.createElement("option", {
+    key: g.id,
+    value: g.id
+  }, g.name)))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Extraction goal"), /*#__PURE__*/React.createElement("div", {
+    className: "segmented"
+  }, GOALS.map(g => /*#__PURE__*/React.createElement("button", {
+    key: g.id,
+    className: 'seg-btn' + (config.goal === g.id ? ' active' : ''),
+    onClick: () => update('goal', g.id),
+    title: g.desc
+  }, g.name)))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Tank size"), /*#__PURE__*/React.createElement("select", {
+    className: "select",
+    value: config.tankSize,
+    onChange: e => update('tankSize', e.target.value)
+  }, TANK_SIZES.map(t => /*#__PURE__*/React.createElement("option", {
+    key: t.id,
+    value: t.id
+  }, t.label)))), /*#__PURE__*/React.createElement("div", {
+    className: "tank-stats"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tank-stat-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-label"
+  }, "Tank class"), /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-val"
+  }, tank.type)), /*#__PURE__*/React.createElement("div", {
+    className: "tank-stat-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-label"
+  }, "H / \xD8 ratio"), /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-val"
+  }, tank.ratio)), /*#__PURE__*/React.createElement("div", {
+    className: "tank-stat-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-label"
+  }, "Recommended fill"), /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-val"
+  }, tank.fill)), /*#__PURE__*/React.createElement("div", {
+    className: "tank-stat-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-label"
+  }, "Min. pressure"), /*#__PURE__*/React.createElement("span", {
+    className: "tank-stat-val"
+  }, tank.pressure, " bar"))));
+}
+function Phase({
+  idx,
+  phase,
+  defaultPhase,
+  tankSize,
+  modified,
+  onUpdate,
+  onReset
+}) {
+  const isModified = Object.keys(modified).some(k => modified[k]);
+  return /*#__PURE__*/React.createElement("div", {
+    className: 'phase' + (isModified ? ' modified' : '')
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "phase-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "phase-num"
+  }, String(idx + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    className: "phase-name-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "phase-name"
+  }, PHASE_NAMES[idx]), /*#__PURE__*/React.createElement("div", {
+    className: "phase-meta"
+  }, PHASE_LATIN[idx])), isModified && /*#__PURE__*/React.createElement("div", {
+    className: "phase-modified-badge"
+  }, "Modified"), isModified && /*#__PURE__*/React.createElement("button", {
+    className: "phase-reset",
+    onClick: () => onReset(idx)
+  }, "Reset phase")), /*#__PURE__*/React.createElement("div", {
+    className: "phase-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "phase-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cell-label"
+  }, "Duration"), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    className: "cell-input",
+    value: phase.duration,
+    min: "0",
+    onChange: e => onUpdate(idx, 'duration', Number(e.target.value))
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "cell-suffix"
+  }, "hours")), /*#__PURE__*/React.createElement("div", {
+    className: "phase-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cell-label"
+  }, "Temperature"), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    className: "cell-input",
+    value: phase.temp,
+    onChange: e => onUpdate(idx, 'temp', Number(e.target.value))
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "cell-suffix"
+  }, "\xB0C")), /*#__PURE__*/React.createElement("div", {
+    className: "phase-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cell-label"
+  }, "Macro-Ox"), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    step: "0.1",
+    className: "cell-input",
+    value: phase.macroOx,
+    onChange: e => onUpdate(idx, 'macroOx', Number(e.target.value))
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "cell-suffix"
+  }, phase.macroOxHours > 0 ? `mg/L over ${phase.macroOxHours}h` : 'none')), /*#__PURE__*/React.createElement("div", {
+    className: "phase-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cell-label"
+  }, "AM Intensity"), /*#__PURE__*/React.createElement("div", {
+    className: "intensity-grid"
+  }, ['Low', 'Medium', 'High', 'Intense'].map(level => /*#__PURE__*/React.createElement("button", {
+    key: level,
+    "data-level": level,
+    className: 'intensity-btn' + (phase.intensity === level ? ' active' : ''),
+    onClick: () => onUpdate(idx, 'intensity', level),
+    title: `${level} intensity`
+  }, level === 'Medium' ? 'Med' : level === 'Intense' ? 'Int' : level))), /*#__PURE__*/React.createElement("div", {
+    className: "cell-suffix",
+    style: {
+      marginTop: 6
     }
-
-    function Metric({ label, value, sub, warn, big }) {
-      return (
-        <div style={{ padding: "10px 0", borderBottom: `1px solid ${C.g05}` }}>
-          <div style={{ fontSize: 10, color: C.g50, fontFamily: F, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>{label}</div>
-          <div style={{ fontSize: big ? 26 : 18, fontWeight: 700, color: warn ? C.fail : C.black, fontFamily: F, marginTop: 2 }}>{value}</div>
-          {sub && <div style={{ fontSize: 11, color: C.g50, fontFamily: F, marginTop: 2 }}>{sub}</div>}
-        </div>
-      );
+  }, phase.intensity === 'None' ? 'No air mixing' : phase.intensity)), /*#__PURE__*/React.createElement("div", {
+    className: "phase-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cell-label"
+  }, "Cycles / day"), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    className: "cell-input",
+    value: phase.hz,
+    min: "0",
+    onChange: e => onUpdate(idx, 'hz', Number(e.target.value))
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "cell-suffix"
+  }, "Hz \xB7 auto from tank+intensity"))));
+}
+function App() {
+  const [projectName, setProjectName] = useState('');
+  const [config, setConfig] = useState({
+    grapeId: 'cab_sauv',
+    goal: 'gentle',
+    tankSize: 'medium'
+  });
+  const grape = GRAPES.find(g => g.id === config.grapeId);
+  const protocolKey = `${grape.skin}_${config.goal}`;
+  const protocol = PROTOCOLS[protocolKey];
+  const tank = TANK_SIZES.find(t => t.id === config.tankSize);
+  const defaultPhases = useMemo(() => {
+    return protocol.phases.map(p => ({
+      ...p,
+      hz: hzFor(p.intensity, config.tankSize)
+    }));
+  }, [protocol, config.tankSize]);
+  const [phases, setPhases] = useState(defaultPhases);
+  const [modifiedFlags, setModifiedFlags] = useState(defaultPhases.map(() => ({})));
+  const [toast, setToast] = useState(null);
+  useEffect(() => {
+    setPhases(defaultPhases);
+    setModifiedFlags(defaultPhases.map(() => ({})));
+  }, [protocolKey, config.tankSize]);
+  const showToast = msg => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2000);
+  };
+  const updatePhase = useCallback((idx, key, value) => {
+    setPhases(prev => {
+      const next = [...prev];
+      const updated = {
+        ...next[idx],
+        [key]: value
+      };
+      if (key === 'intensity') {
+        updated.hz = hzFor(value, config.tankSize);
+      }
+      next[idx] = updated;
+      return next;
+    });
+    setModifiedFlags(prev => {
+      const next = [...prev];
+      next[idx] = {
+        ...next[idx],
+        [key]: true
+      };
+      return next;
+    });
+  }, [config.tankSize]);
+  const resetPhase = idx => {
+    setPhases(prev => {
+      const next = [...prev];
+      next[idx] = {
+        ...defaultPhases[idx]
+      };
+      return next;
+    });
+    setModifiedFlags(prev => {
+      const next = [...prev];
+      next[idx] = {};
+      return next;
+    });
+    showToast(`Phase ${idx + 1} reset to default`);
+  };
+  const resetAll = () => {
+    setPhases(defaultPhases);
+    setModifiedFlags(defaultPhases.map(() => ({})));
+    showToast('All phases reset to defaults');
+  };
+  const totalDuration = phases.reduce((s, p) => s + (p.duration || 0), 0);
+  const avgTemp = phases.reduce((s, p) => s + p.temp, 0) / phases.length;
+  const totalMacroOx = phases.reduce((s, p) => s + (p.macroOx || 0) * (p.macroOxHours > 0 ? p.duration / 24 : 0), 0);
+  const maxDuration = Math.max(...phases.map(p => p.duration || 0));
+  const buildTextExport = () => {
+    const projLine = projectName ? `PROJECT: ${projectName}` : 'PROJECT: (unnamed)';
+    const lines = [projLine, `GRAPE: ${grape.name} (${grape.skin} skin)`, `PROTOCOL: ${protocol.label}`, `TANK: ${tank.type} (${tank.label}), pressure ${tank.pressure} bar, fill ${tank.fill}`, `TOTAL DURATION: ${totalDuration} hours (~${(totalDuration / 24).toFixed(1)} days)`, '', '------- RECIPE -------'];
+    phases.forEach((p, i) => {
+      const oxNote = p.macroOx > 0 ? `Macro-Ox ${p.macroOx} mg/L over ${p.macroOxHours}h` : 'Macro-Ox none';
+      lines.push(`\nPHASE ${i + 1} — ${PHASE_NAMES[i]}`, `  Duration: ${p.duration} hr  |  Temp: ${p.temp}°C`, `  ${oxNote}`, `  AM Intensity: ${p.intensity} (${p.hz} cycles/day)`);
+    });
+    lines.push('', '------- NOTES -------', 'Hz values are derived from the SAEn 5000 intensity matrix for the selected tank size.', 'Confirm tank fill level and pressure before starting the cycle.', '', 'Generated with the Enartis Engineering AM Intensity Guide.');
+    return lines.join('\n');
+  };
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(buildTextExport());
+      showToast('Recipe copied to clipboard');
+    } catch (err) {
+      showToast('Copy failed — try Print instead');
     }
-
-    function Badge({ text, color }) {
-      const s = { green: { bg: C.okBg, br: "#b8dfc2", tx: C.ok }, yellow: { bg: C.warnBg, br: "#e8d5a0", tx: C.warn }, red: { bg: C.failBg, br: "#e8b0b0", tx: C.fail }, blue: { bg: C.blueLight, br: "#a8d4ef", tx: C.blue } }[color] || { bg: C.blueLight, br: "#a8d4ef", tx: C.blue };
-      return <span style={{ display: "inline-block", padding: "3px 10px", fontSize: 10, fontFamily: F, fontWeight: 700, background: s.bg, border: `1px solid ${s.br}`, color: s.tx, borderRadius: 3, textTransform: "uppercase", letterSpacing: "0.06em" }}>{text}</span>;
+  };
+  const handlePrint = () => {
+    window.print();
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Header, {
+    projectName: projectName,
+    setProjectName: setProjectName
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement(Configurator, {
+    config: config,
+    setConfig: setConfig,
+    tank: tank
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "recipe-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "accent-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "recipe-title"
+  }, protocol.label), /*#__PURE__*/React.createElement("div", {
+    className: "recipe-subtitle"
+  }, protocol.desc)), /*#__PURE__*/React.createElement("div", {
+    className: "summary-stats"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Total time"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-value"
+  }, totalDuration, /*#__PURE__*/React.createElement("span", {
+    className: "unit"
+  }, "hr"))), /*#__PURE__*/React.createElement("div", {
+    className: "stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Avg. temp"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-value"
+  }, avgTemp.toFixed(1), /*#__PURE__*/React.createElement("span", {
+    className: "unit"
+  }, "\xB0C"))), /*#__PURE__*/React.createElement("div", {
+    className: "stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Macro-Ox"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-value"
+  }, totalMacroOx.toFixed(1), /*#__PURE__*/React.createElement("span", {
+    className: "unit"
+  }, "mg/L"))))), /*#__PURE__*/React.createElement("div", {
+    className: "timeline"
+  }, phases.map((p, i) => /*#__PURE__*/React.createElement("div", {
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "timeline-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "timeline-fill",
+    style: {
+      width: `${maxDuration > 0 ? p.duration / maxDuration * 100 : 0}%`
     }
-
-    function Sec({ text }) {
-      return (
-        <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "24px 0 14px" }}>
-          <div style={{ width: 4, height: 20, background: C.teal, borderRadius: 2 }} />
-          <span style={{ fontSize: 13, fontFamily: F, fontWeight: 700, color: C.black, textTransform: "uppercase", letterSpacing: "0.04em" }}>{text}</span>
-        </div>
-      );
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "timeline-label"
+  }, PHASE_NAMES[i]), /*#__PURE__*/React.createElement("div", {
+    className: "timeline-hours"
+  }, p.duration, "h")))), /*#__PURE__*/React.createElement("div", {
+    className: "phases"
+  }, phases.map((p, i) => /*#__PURE__*/React.createElement(Phase, {
+    key: i,
+    idx: i,
+    phase: p,
+    defaultPhase: defaultPhases[i],
+    tankSize: config.tankSize,
+    modified: modifiedFlags[i],
+    onUpdate: updatePhase,
+    onReset: resetPhase
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: handlePrint
+  }, "Print one-pager"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-secondary",
+    onClick: handleCopy
+  }, "Copy as text"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-danger",
+    onClick: resetAll
+  }, "Reset all to defaults")), /*#__PURE__*/React.createElement("div", {
+    className: "print-only signature"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "signature-line"
+  }, "Operator"), /*#__PURE__*/React.createElement("div", {
+    className: "signature-line"
+  }, "Date"), /*#__PURE__*/React.createElement("div", {
+    className: "signature-line"
+  }, "Tank #")))), /*#__PURE__*/React.createElement("div", {
+    className: "doc-footer"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "accent-text"
+  }, "Enartis Engineering"), " \xB7 Air Mixing Intensity Guide \xB7 SAEn 5000"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 4,
+      fontSize: 11
     }
+  }, "Reference protocol composer. Confirm settings against winemaker objectives and current ferment conditions."), /*#__PURE__*/React.createElement("div", {
+    className: "winegrid-tease"
+  }, "For real-time intensity tuning during ferment, ask about Winegrid Wineplus integration.")), toast && /*#__PURE__*/React.createElement("div", {
+    className: "toast"
+  }, toast));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+});
+</script>
 
-    // ─── Main App ─────────────────────────────────────────────────────────────────
-    function App() {
-      const [view, setView] = useState("deal");
-      const [settings, setSettings] = useState({ ...SETTINGS_DEFAULTS });
-
-      // ── Default client: Accenti Wines ──
-      const [dealName, setDealName] = useState("Accenti Wines");
-      const [rep, setRep] = useState("James");
-      const [termYears, setTermYears] = useState(5);
-      const [isImmediate, setIsImmediate] = useState(false);
-      const [annualInvoicing, setAnnualInvoicing] = useState(false);
-      const [targetEndPrice, setTargetEndPrice] = useState(1);
-      const [dealNotes, setDealNotes] = useState("");
-
-      // Equipment lines — retailPrice entered manually on Deal Setup
-      const [equipmentLines, setEquipmentLines] = useState([
-        { id: uid(), equipId: "cm1000", qty: 1, customName: "", retailPrice: 0 }
-      ]);
-
-      const [spendLines, setSpendLines] = useState([
-        { id: uid(), groupId: "enzymes",       annualSpend: 3300,  gmOverride: null },
-        { id: uid(), groupId: "so2",           annualSpend: 6000,  gmOverride: null },
-        { id: uid(), groupId: "tannins",       annualSpend: 10000, gmOverride: null },
-        { id: uid(), groupId: "stabilization", annualSpend: 15000, gmOverride: null },
-        { id: uid(), groupId: "yeast",         annualSpend: 10000, gmOverride: null },
-        { id: uid(), groupId: "fining",        annualSpend: 9000,  gmOverride: null },
-        { id: uid(), groupId: "nutrients",     annualSpend: 5000,  gmOverride: null },
-      ]);
-
-      const [annualData, setAnnualData] = useState(
-        Array.from({ length: 10 }, (_, i) => ({ year: i + 1, actualGS: null, actualGM: null }))
-      );
-
-      // ── Total Deal GM state ──
-      // equipCosts: { [lineId]: costPerUnit } — entered manually on Internal tab
-      const [equipCosts, setEquipCosts] = useState({});
-      const [productCostPctOverride, setProductCostPctOverride] = useState(null);
-
-      const calcs = useMemo(() => {
-        // Equipment retail total — all prices entered manually
-        const eT = equipmentLines.reduce((s, l) => s + (l.retailPrice || 0) * l.qty, 0);
-
-        // Equipment landed cost — from Total Deal GM card inputs, with use tax
-        const eL = equipmentLines.reduce((s, l) => {
-          const cost = equipCosts[l.id] || 0;
-          return s + cost * (1 + settings.useTaxRate) * l.qty;
-        }, 0);
-
-        let aS = 0, aP = 0, aM = 0;
-        const sd = spendLines.map(l => {
-          const g = PRODUCT_GROUPS.find(x => x.id === l.groupId);
-          if (!g || !l.annualSpend) return { ...l, points: 0, margin: 0 };
-          const r = POINTS_RATES[g.category];
-          const gm = (l.gmOverride != null && l.gmOverride !== "") ? parseFloat(l.gmOverride) / 100 : g.defaultGM;
-          const pts = l.annualSpend * r;
-          const m   = l.annualSpend * gm;
-          aS += l.annualSpend; aP += pts; aM += m;
-          return { ...l, points: pts, margin: m, gm, rate: r };
-        });
-
-        const t   = isImmediate ? 1 : termYears;
-        const tS  = aS * t, tP = aP * t, tM = aM * t;
-        const pEP = Math.max(targetEndPrice, eT - tP);
-        const pN  = Math.max(0, eT - targetEndPrice);
-        const pSh = Math.max(0, pN - tP);
-        const oT  = tP >= pN;
-        const mM  = eL > 0 ? tM / eL : 0;
-        const pMin = mM >= settings.minMultiple;
-        const pTgt = mM >= settings.targetMultiple;
-        const bGM  = aS > 0 ? aM / aS : 0;
-        const aPT  = t > 0 ? pN / t : 0;
-
-        // Total Deal GM
-        const totalRevenue     = eT + tS;
-        const totalEquipCost   = eL;
-        const prodCostPct      = productCostPctOverride != null ? productCostPctOverride / 100 : (1 - bGM);
-        const totalProductCost = tS * prodCostPct;
-        const totalDealGM      = totalRevenue - totalEquipCost - totalProductCost;
-        const totalDealGMPct   = totalRevenue > 0 ? totalDealGM / totalRevenue : 0;
-
-        let cGS = 0, cGM = 0, cPts = 0;
-        const ar = annualData.slice(0, t).map((yr, i) => {
-          const gs = yr.actualGS || 0, gm = yr.actualGM || 0;
-          cGS += gs; cGM += gm;
-          const br  = aS > 0 ? aP / aS : 0.4;
-          const yP  = gs * br; cPts += yP;
-          const prt = aPT * (i + 1);
-          return { ...yr, cumGS: cGS, cumGM: cGM, yrPoints: yP, cumPoints: cPts, proRataTarget: prt, onTrack: cPts >= prt * 0.9 };
-        });
-
-        return {
-          equipTotal: eT, equipLanded: eL,
-          annualSpend: aS, annualPoints: aP, annualMargin: aM,
-          totalSpend: tS, totalPoints: tP, totalMargin: tM, term: t,
-          spendDetail: sd, projectedEndPrice: pEP, pointsNeeded: pN,
-          pointsShortfall: pSh, onTrack: oT, marginMultiple: mM,
-          passesMin: pMin, passesTarget: pTgt, blendedGM: bGM,
-          annualPointsTarget: aPT, annualReview: ar,
-          totalRevenue, totalEquipCost, totalProductCost, totalDealGM, totalDealGMPct, prodCostPct,
-        };
-      }, [equipmentLines, spendLines, termYears, isImmediate, targetEndPrice, settings, annualData, equipCosts, productCostPctOverride]);
-
-      const addEq = () => setEquipmentLines(p => [...p, { id: uid(), equipId: "", qty: 1, customName: "", retailPrice: 0 }]);
-      const rmEq  = id => setEquipmentLines(p => p.filter(l => l.id !== id));
-      const upEq  = (id, f, v) => setEquipmentLines(p => p.map(l => l.id === id ? { ...l, [f]: v } : l));
-      const addSp = () => setSpendLines(p => [...p, { id: uid(), groupId: "", annualSpend: 0, gmOverride: null }]);
-      const rmSp  = id => setSpendLines(p => p.filter(l => l.id !== id));
-      const upSp  = (id, f, v) => setSpendLines(p => p.map(l => l.id === id ? { ...l, [f]: v } : l));
-      const upAn  = (i, f, v) => setAnnualData(p => p.map((d, j) => j === i ? { ...d, [f]: v === "" ? null : Number(v) } : d));
-
-      const nb = v => ({ padding: "8px 16px", fontSize: 11, fontFamily: F, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", border: "none", borderBottom: view === v ? `3px solid ${C.blue}` : "3px solid transparent", background: "transparent", color: view === v ? C.blue : C.g50, cursor: "pointer", transition: "all 0.2s" });
-
-      return (
-        <div style={{ minHeight: "100vh", background: C.g05, color: C.black, fontFamily: F }}>
-
-          {/* ── Header ── */}
-          <div style={{ background: C.white, borderBottom: `1px solid ${C.g15}`, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 0" }}>
-
-              {/*
-               * ── LOGO SWAP ────────────────────────────────────────────
-               * To use the real Enartis logo PNG, replace the <div> text
-               * wordmark block below with:
-               *
-               *   <img src="enartis-logo.png" alt="Enartis" style={{height:32}} />
-               *
-               * Place enartis-logo.png in the same folder as this index.html
-               * and it will load automatically when you push to GitHub.
-               * ─────────────────────────────────────────────────────────
-               */}
-              <div style={{ display: "flex", alignItems: "baseline" }}>
-                <img src="FA_Logo_Enartis_ENGINEERING_RGB.png" alt="Enartis Engineering" style={{height: 100, width: "auto"}} />
-              </div>
-
-              <div style={{ width: 1, height: 24, background: C.g15 }} />
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 800, color: C.black, textTransform: "uppercase", letterSpacing: "0.08em" }}>POINTS</div>
-              </div>
-            </div>
-
-            <div style={{ display: "flex" }}>
-              <button style={nb("deal")}     onClick={() => setView("deal")}>Deal Setup</button>
-              <button style={nb("customer")} onClick={() => setView("customer")}>Customer View</button>
-              <button style={nb("internal")} onClick={() => setView("internal")}>Internal</button>
-              <button style={nb("annual")}   onClick={() => setView("annual")}>Annual Review</button>
-            </div>
-          </div>
-
-          <div style={{ maxWidth: 960, margin: "0 auto", padding: "24px 20px" }}>
-
-            {/* ════════ DEAL SETUP ════════ */}
-            {view === "deal" && (
-              <div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-
-                  {/* Deal Info */}
-                  <div style={crd}>
-                    <Sec text="Deal Information" />
-                    <div style={{ display: "grid", gap: 12 }}>
-                      <div><label style={lbl}>Client</label><input style={inp} value={dealName} onChange={e => setDealName(e.target.value)} /></div>
-                      <div><label style={lbl}>Rep</label><input style={inp} value={rep} onChange={e => setRep(e.target.value)} /></div>
-                      <div style={{ display: "flex", gap: 12 }}>
-                        <div style={{ flex: 1 }}>
-                          <label style={lbl}>Term (years)</label>
-                          <input style={inp} type="number" min={1} max={10} value={termYears} onChange={e => setTermYears(Number(e.target.value) || 1)} disabled={isImmediate} />
-                        </div>
-                        <div style={{ flex: 1, display: "flex", alignItems: "flex-end" }}>
-                          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontFamily: F, color: C.g70, cursor: "pointer" }}>
-                            <input type="checkbox" checked={isImmediate} onChange={e => setIsImmediate(e.target.checked)} style={{ accentColor: C.blue }} />
-                            Immediate
-                          </label>
-                        </div>
-                      </div>
-                      <div>
-                        <label style={lbl}>Target Equipment Price at End</label>
-                        <input style={inp} type="number" min={0} value={targetEndPrice} onChange={e => setTargetEndPrice(Number(e.target.value) || 0)} />
-                        <div style={{ fontSize: 10, color: C.g50, marginTop: 3 }}>$1 = full transfer. Higher = partial discount goal.</div>
-                      </div>
-                      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontFamily: F, color: C.g70, cursor: "pointer" }}>
-                        <input type="checkbox" checked={annualInvoicing} onChange={e => setAnnualInvoicing(e.target.checked)} style={{ accentColor: C.blue }} />
-                        Annual equipment invoicing
-                      </label>
-                      <div><label style={lbl}>Notes</label><textarea style={{ ...inp, height: 56, resize: "vertical" }} value={dealNotes} onChange={e => setDealNotes(e.target.value)} /></div>
-                    </div>
-                  </div>
-
-                  {/* Equipment — retail price entered manually */}
-                  <div style={crd}>
-                    <Sec text="Equipment" />
-                    <div style={{ fontSize: 10, color: C.g50, marginBottom: 10 }}>Enter retail price for each unit. Equipment costs (landed) go on Internal → Total Deal GM.</div>
-                    {equipmentLines.map(l => {
-                      const ic = l.equipId === "custom";
-                      return (
-                        <div key={l.id} style={{ marginBottom: 10 }}>
-                          <div style={{ display: "grid", gridTemplateColumns: "2fr 90px 70px 28px", gap: 6, alignItems: "center" }}>
-                            <select style={sel} value={l.equipId} onChange={e => upEq(l.id, "equipId", e.target.value)}>
-                              <option value="">Select equipment...</option>
-                              {EQUIPMENT_LIST.map(eq => <option key={eq.id} value={eq.id}>{eq.name}</option>)}
-                              <option value="custom">✎ Custom</option>
-                            </select>
-                            <input style={{ ...inp, textAlign: "right" }} type="number" min={0} step={500} value={l.retailPrice || ""} onChange={e => upEq(l.id, "retailPrice", Number(e.target.value) || 0)} placeholder="Price $" />
-                            <input style={{ ...inp, textAlign: "center" }} type="number" min={1} value={l.qty} onChange={e => upEq(l.id, "qty", Number(e.target.value) || 1)} placeholder="Qty" />
-                            {equipmentLines.length > 1 && <button onClick={() => rmEq(l.id)} style={xBtn}>×</button>}
-                          </div>
-                          {ic && <div style={{ marginTop: 8, paddingLeft: 4 }}>
-                            <label style={{ ...lbl, fontSize: 10 }}>Custom Name</label>
-                            <input style={inp} value={l.customName} onChange={e => upEq(l.id, "customName", e.target.value)} placeholder="e.g. 20× Winegrid + SmartBox" />
-                          </div>}
-                        </div>
-                      );
-                    })}
-                    <button onClick={addEq} style={{ ...dBtn, width: "100%", marginTop: 4 }}>+ Add equipment</button>
-                    <div style={{ marginTop: 16, paddingTop: 12, borderTop: `1px solid ${C.g05}` }}>
-                      <Metric label="Equipment Retail Total" value={fmt(calcs.equipTotal)} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Annual Product Spend */}
-                <div style={crd}>
-                  <Sec text="Annual Product Spend" />
-                  <div style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr 0.8fr 0.8fr 28px", gap: "6px 10px", alignItems: "center", fontSize: 10, color: C.g50, marginBottom: 8, textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.06em" }}>
-                    <span>Product Group</span><span>Annual Spend</span><span>Category</span><span style={{ textAlign: "right" }}>Points/yr</span><span></span>
-                  </div>
-                  {spendLines.map(l => {
-                    const g = PRODUCT_GROUPS.find(x => x.id === l.groupId);
-                    const d = calcs.spendDetail.find(x => x.id === l.id);
-                    return (
-                      <div key={l.id} style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr 0.8fr 0.8fr 28px", gap: "6px 10px", alignItems: "center", marginBottom: 6 }}>
-                        <select style={sel} value={l.groupId} onChange={e => upSp(l.id, "groupId", e.target.value)}>
-                          <option value="">Select product...</option>
-                          {PRODUCT_GROUPS.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
-                        </select>
-                        <input style={{ ...inp, textAlign: "right" }} type="number" min={0} step={500} value={l.annualSpend || ""} onChange={e => upSp(l.id, "annualSpend", Number(e.target.value) || 0)} placeholder="$0" />
-                        <span style={{ fontSize: 11, fontWeight: 600, color: g?.category === "commodity" ? C.warn : C.blue, textAlign: "center" }}>{g ? (g.category === "commodity" ? "0.2×" : "0.5×") : "—"}</span>
-                        <span style={{ fontSize: 12, color: C.g70, textAlign: "right", fontWeight: 600 }}>{d?.points ? fmtN(d.points) : "—"}</span>
-                        {spendLines.length > 1 && <button onClick={() => rmSp(l.id)} style={xBtn}>×</button>}
-                      </div>
-                    );
-                  })}
-                  <button onClick={addSp} style={{ ...dBtn, marginTop: 8 }}>+ Add product line</button>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.g05}` }}>
-                    <Metric label="Annual Spend" value={fmt(calcs.annualSpend)} />
-                    <Metric label="Annual Points" value={fmtN(calcs.annualPoints)} sub={`${fmtN(calcs.totalPoints)} over ${calcs.term} yr${calcs.term > 1 ? "s" : ""}`} />
-                    <Metric label="Projected End Price" value={fmt(calcs.projectedEndPrice)} sub={calcs.onTrack ? "✓ On track" : `${fmtN(calcs.pointsShortfall)} pts short`} warn={!calcs.onTrack} />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ════════ CUSTOMER VIEW ════════ */}
-            {view === "customer" && (
-              <div>
-                <div style={{ textAlign: "center", marginBottom: 32 }}>
-                  <div style={{ fontSize: 11, color: C.g50, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700 }}>Enartis Engineering Points Program</div>
-                  <h2 style={{ fontSize: 26, fontWeight: 800, margin: "8px 0 4px", color: C.black }}>{dealName}</h2>
-                  <div style={{ fontSize: 13, color: C.g70 }}>{isImmediate ? "Immediate points application" : `${termYears}-year agreement`}{annualInvoicing && " · Annual invoicing"}</div>
-                </div>
-                <div style={crd}>
-                  <Sec text="Your Points Progress" />
-                  <PointsBar earned={calcs.totalPoints} target={calcs.pointsNeeded} label={`${fmtN(calcs.totalPoints)} of ${fmtN(calcs.pointsNeeded)} points needed`} />
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginTop: 12 }}>
-                    <Metric label="Equipment Retail" value={fmt(calcs.equipTotal)} big />
-                    <Metric label="Points Earned" value={fmtN(calcs.totalPoints)} big />
-                    <Metric label="Your Projected Price" value={fmt(calcs.projectedEndPrice)} sub={calcs.onTrack ? "✓ Target achieved" : `Need ${fmtN(calcs.pointsShortfall)} more`} big warn={!calcs.onTrack} />
-                  </div>
-                </div>
-                <div style={crd}>
-                  <Sec text="How Points Work" />
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                    <div style={{ padding: 16, background: C.blueLight, borderRadius: 6, border: "1px solid #a8d4ef" }}>
-                      <div style={{ fontSize: 22, fontWeight: 800, color: C.blue }}>0.5 pts</div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: C.g70, marginTop: 4 }}>per $1 — Standard Products</div>
-                      <div style={{ fontSize: 11, color: C.g50, marginTop: 8, lineHeight: 1.5 }}>Enzymes, Yeast, Nutrients, Tannins, Fining, Oak, MLF, Stabilization, Yeast Derivatives</div>
-                    </div>
-                    <div style={{ padding: 16, background: C.warnBg, borderRadius: 6, border: "1px solid #e8d5a0" }}>
-                      <div style={{ fontSize: 22, fontWeight: 800, color: C.warn }}>0.2 pts</div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: C.g70, marginTop: 4 }}>per $1 — Commodity Products</div>
-                      <div style={{ fontSize: 11, color: C.g50, marginTop: 8, lineHeight: 1.5 }}>SO₂, Tartaric Acid, Citric Acid, Bentonite</div>
-                    </div>
-                  </div>
-                </div>
-                <div style={crd}>
-                  <Sec text="Annual Spend Plan" />
-                  {calcs.spendDetail.filter(d => d.annualSpend > 0).map(d => {
-                    const g = PRODUCT_GROUPS.find(x => x.id === d.groupId);
-                    return (
-                      <div key={d.id} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${C.g05}` }}>
-                        <span style={{ fontSize: 14 }}>{g?.name}</span>
-                        <div>
-                          <span style={{ fontSize: 13, fontWeight: 600 }}>{fmt(d.annualSpend)}</span>
-                          <span style={{ fontSize: 11, color: C.g50, marginLeft: 12 }}>{fmtN(d.points)} pts/yr</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderTop: `2px solid ${C.g15}`, marginTop: 8 }}>
-                    <span style={{ fontWeight: 800 }}>Total Annual</span>
-                    <div>
-                      <span style={{ fontSize: 15, fontWeight: 700 }}>{fmt(calcs.annualSpend)}</span>
-                      <span style={{ fontSize: 13, color: C.blue, fontWeight: 600, marginLeft: 12 }}>{fmtN(calcs.annualPoints)} pts/yr</span>
-                    </div>
-                  </div>
-                </div>
-                {!isImmediate && (
-                  <div style={crd}>
-                    <Sec text={annualInvoicing ? "Annual Equipment Invoicing" : "Points Timeline"} />
-                    {Array.from({ length: calcs.term }, (_, i) => {
-                      const cp  = calcs.annualPoints * (i + 1);
-                      const rem = Math.max(targetEndPrice, calcs.equipTotal - cp);
-                      return (
-                        <div key={i} style={{ display: "grid", gridTemplateColumns: "70px 1fr 100px 100px", gap: 12, alignItems: "center", padding: "8px 0", borderBottom: `1px solid ${C.g05}` }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: C.g50 }}>Year {i + 1}</span>
-                          <PointsBar earned={cp} target={calcs.pointsNeeded} />
-                          <span style={{ fontSize: 12, textAlign: "right" }}>{fmtN(cp)} pts</span>
-                          <span style={{ fontSize: 12, fontWeight: 700, textAlign: "right", color: rem <= targetEndPrice ? C.ok : C.g70 }}>{fmt(rem)}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-                <div style={{ ...crd, background: C.okBg, borderColor: "#b8dfc2" }}>
-                  <Sec text="At the End of the Agreement" />
-                  <p style={{ fontSize: 14, lineHeight: 1.7, margin: 0, color: C.g70 }}>
-                    {calcs.onTrack
-                      ? `Based on your projected spend, you'll earn ${fmtN(calcs.totalPoints)} points — enough to bring the equipment price to ${fmt(targetEndPrice)}. ${targetEndPrice <= 1 ? "The equipment transfers to you." : "You pay the remaining balance."}`
-                      : `If your spend comes in as projected, you'll earn ${fmtN(calcs.totalPoints)} points. The remaining equipment balance would be ${fmt(calcs.projectedEndPrice)}. You can increase spend, extend the term, or pay the balance.`}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* ════════ INTERNAL ════════ */}
-            {view === "internal" && (
-              <div>
-                <details style={{ marginBottom: 16 }}>
-                  <summary style={{ fontSize: 12, color: C.g50, cursor: "pointer", fontWeight: 700 }}>Settings (Finance only)</summary>
-                  <div style={{ ...crd, marginTop: 8, display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
-                    {[
-                      { k: "minMultiple",        l: "Min Multiple",    s: 0.1 },
-                      { k: "targetMultiple",      l: "Target Multiple", s: 0.1 },
-                      { k: "useTaxRate",          l: "Use Tax Rate",    s: 0.005 },
-                      { k: "escalationThreshold", l: "Escalation ($)",  s: 5000 },
-                    ].map(x => (
-                      <div key={x.k}>
-                        <label style={lbl}>{x.l}</label>
-                        <input style={inp} type="number" step={x.s} value={settings[x.k]} onChange={e => setSettings(p => ({ ...p, [x.k]: Number(e.target.value) }))} />
-                      </div>
-                    ))}
-                  </div>
-                </details>
-
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-
-                  {/* Deal Economics */}
-                  <div style={crd}>
-                    <Sec text="Deal Economics" />
-                    <Metric label="Equipment Retail Total" value={fmt(calcs.equipTotal)} />
-                    <Metric label="Total Contract Margin (products)" value={fmt(calcs.totalMargin)} />
-                    <Metric label="Margin Multiple" value={calcs.marginMultiple.toFixed(2) + "x"} sub={`Min ${settings.minMultiple}x / Target ${settings.targetMultiple}x`} warn={!calcs.passesMin} big />
-                    <Metric label="Blended GM%" value={fmtPct(calcs.blendedGM)} />
-                    <div style={{ marginTop: 12 }}>
-                      {calcs.passesTarget ? <Badge text="Strong Pass" color="green" /> : calcs.passesMin ? <Badge text="Pass — Review" color="yellow" /> : <Badge text="Does Not Pass" color="red" />}
-                    </div>
-                  </div>
-
-                  {/* ── Total Deal GM card (replaces Risk Assessment) ── */}
-                  <div style={crd}>
-                    <Sec text="Total Deal GM" />
-                    <div style={{ fontSize: 11, color: C.g50, marginBottom: 14 }}>
-                      Enter your equipment costs below. Product costs auto-calculate from blended GM (or override the cost %).
-                    </div>
-
-                    {/* Equipment cost inputs */}
-                    <div style={{ marginBottom: 16 }}>
-                      <div style={{ fontSize: 10, color: C.g50, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>Equipment Costs (Landed, per unit)</div>
-                      {equipmentLines.map(l => {
-                        const eq   = EQUIPMENT_LIST.find(e => e.id === l.equipId);
-                        const name = l.equipId === "custom" ? (l.customName || "Custom") : (eq?.name || "—");
-                        return (
-                          <div key={l.id} style={{ display: "grid", gridTemplateColumns: "1fr 100px 80px", gap: 8, alignItems: "center", marginBottom: 6 }}>
-                            <span style={{ fontSize: 12, color: C.g70 }}>{name}{l.qty > 1 ? ` ×${l.qty}` : ""}</span>
-                            <input
-                              style={{ ...inp, textAlign: "right", padding: "6px 8px" }}
-                              type="number" min={0} step={500}
-                              value={equipCosts[l.id] || ""}
-                              onChange={e => setEquipCosts(p => ({ ...p, [l.id]: Number(e.target.value) || 0 }))}
-                              placeholder="Cost/unit"
-                            />
-                            <span style={{ fontSize: 11, color: C.g50 }}>
-                              {equipCosts[l.id] ? fmt(equipCosts[l.id] * l.qty) : "—"}
-                            </span>
-                          </div>
-                        );
-                      })}
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, fontWeight: 700, paddingTop: 8, borderTop: `1px solid ${C.g05}`, marginTop: 4 }}>
-                        <span style={{ color: C.g70 }}>Total equip cost (w/ use tax)</span>
-                        <span>{fmt(calcs.totalEquipCost)}</span>
-                      </div>
-                    </div>
-
-                    {/* Product cost override */}
-                    <div style={{ marginBottom: 16 }}>
-                      <label style={lbl}>Product Cost % Override</label>
-                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <input
-                          style={{ ...inp, width: 90, textAlign: "right" }}
-                          type="number" min={0} max={100} step={1}
-                          value={productCostPctOverride ?? ""}
-                          onChange={e => setProductCostPctOverride(e.target.value === "" ? null : Number(e.target.value))}
-                          placeholder={((1 - calcs.blendedGM) * 100).toFixed(0)}
-                        />
-                        <span style={{ fontSize: 11, color: C.g50 }}>% of product revenue (blank = auto from blended GM)</span>
-                      </div>
-                    </div>
-
-                    {/* GM Summary */}
-                    <div style={{ background: C.g05, borderRadius: 6, padding: 14 }}>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 0", fontSize: 13 }}>
-                        <span style={{ color: C.g50 }}>Equipment revenue</span>
-                        <span style={{ textAlign: "right", fontWeight: 600 }}>{fmt(calcs.equipTotal)}</span>
-                        <span style={{ color: C.g50 }}>Product revenue ({calcs.term}yr)</span>
-                        <span style={{ textAlign: "right", fontWeight: 600 }}>{fmt(calcs.totalSpend)}</span>
-                        <span style={{ color: C.g50, paddingTop: 6, borderTop: `1px solid ${C.g15}`, marginTop: 4 }}>Total revenue</span>
-                        <span style={{ textAlign: "right", fontWeight: 700, paddingTop: 6, borderTop: `1px solid ${C.g15}`, marginTop: 4 }}>{fmt(calcs.totalRevenue)}</span>
-                        <span style={{ color: C.g50 }}>Equipment cost</span>
-                        <span style={{ textAlign: "right", color: C.fail }}>{fmt(calcs.totalEquipCost)}</span>
-                        <span style={{ color: C.g50 }}>Product cost</span>
-                        <span style={{ textAlign: "right", color: C.fail }}>{fmt(calcs.totalProductCost)}</span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12, paddingTop: 10, borderTop: `2px solid ${C.g15}` }}>
-                        <span style={{ fontSize: 13, fontWeight: 700 }}>Total Deal GM</span>
-                        <div style={{ textAlign: "right" }}>
-                          <div style={{ fontSize: 22, fontWeight: 800, color: calcs.totalDealGM >= 0 ? C.ok : C.fail }}>{fmt(calcs.totalDealGM)}</div>
-                          <div style={{ fontSize: 12, color: C.g50 }}>{fmtPct(calcs.totalDealGMPct)} of total revenue</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Product Margin Detail */}
-                <div style={crd}>
-                  <Sec text="Product Margin Detail" />
-                  <div style={{ fontSize: 11, color: C.g50, marginBottom: 10 }}>Edit GM% to reflect discounts or non-standard pricing</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 0.9fr 1fr 1fr 0.7fr", gap: "4px 12px", fontSize: 10, color: C.g50, marginBottom: 8, textTransform: "uppercase", fontWeight: 600 }}>
-                    <span>Product</span><span style={{ textAlign: "right" }}>Spend</span><span style={{ textAlign: "center" }}>GM% ✎</span><span style={{ textAlign: "right" }}>Margin</span><span style={{ textAlign: "right" }}>Points</span><span style={{ textAlign: "center" }}>Rate</span>
-                  </div>
-                  {calcs.spendDetail.filter(d => d.annualSpend > 0).map(d => {
-                    const g  = PRODUCT_GROUPS.find(x => x.id === d.groupId);
-                    const sl = spendLines.find(x => x.id === d.id);
-                    return (
-                      <div key={d.id} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 0.9fr 1fr 1fr 0.7fr", gap: "4px 12px", padding: "6px 0", borderBottom: `1px solid ${C.g05}`, fontSize: 13, alignItems: "center" }}>
-                        <span>{g?.name}</span>
-                        <span style={{ textAlign: "right" }}>{fmt(d.annualSpend)}</span>
-                        <input style={{ ...inp, textAlign: "center", padding: "4px 6px", fontSize: 12 }} type="number" min={0} max={100} step={1} value={sl?.gmOverride != null && sl?.gmOverride !== "" ? sl.gmOverride : ""} onChange={e => upSp(d.id, "gmOverride", e.target.value === "" ? null : e.target.value)} placeholder={g ? (g.defaultGM * 100).toFixed(0) : "—"} />
-                        <span style={{ textAlign: "right" }}>{fmt(d.margin)}</span>
-                        <span style={{ textAlign: "right" }}>{fmtN(d.points)}</span>
-                        <span style={{ textAlign: "center", fontWeight: 700, color: d.rate === 0.5 ? C.blue : C.warn }}>{d.rate}×</span>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Points Economics */}
-                <div style={{ ...crd, background: C.blueLight, borderColor: "#a8d4ef" }}>
-                  <Sec text="Points Economics" />
-                  <p style={{ fontSize: 13, lineHeight: 1.7, color: C.g70, margin: "0 0 8px" }}>
-                    At current rates, <strong style={{ color: C.black }}>{fmt(calcs.annualSpend)}/yr</strong> generates <strong style={{ color: C.black }}>{fmtN(calcs.annualPoints)} pts/yr</strong> and <strong style={{ color: C.black }}>{fmt(calcs.annualMargin)}/yr margin</strong>. Over {calcs.term} yr{calcs.term > 1 ? "s" : ""}: <strong style={{ color: C.black }}>{fmtN(calcs.totalPoints)} total points</strong>, <strong style={{ color: C.black }}>{fmt(calcs.totalMargin)} total margin</strong>.
-                  </p>
-                  <p style={{ fontSize: 13, lineHeight: 1.7, color: C.g70, margin: 0 }}>
-                    Equipment retail: {fmt(calcs.equipTotal)} → End price: <strong style={{ color: calcs.onTrack ? C.ok : C.fail }}>{fmt(calcs.projectedEndPrice)}</strong>. {calcs.onTrack ? `Customer reaches target. Margin ${fmt(calcs.totalMargin)} vs ${fmt(calcs.equipLanded)} landed = ${calcs.marginMultiple.toFixed(1)}x.` : `${fmtN(calcs.pointsShortfall)} pts short. Invoice: ${fmt(calcs.projectedEndPrice)}.`}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* ════════ ANNUAL REVIEW ════════ */}
-            {view === "annual" && (
-              <div>
-                <div style={{ marginBottom: 20 }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 800, color: C.black, margin: "0 0 4px" }}>Annual Review — {dealName}</h2>
-                  <p style={{ fontSize: 12, color: C.g50, margin: 0 }}>Enter actual GS and GM from BI for each completed year.</p>
-                </div>
-                <div style={crd}>
-                  <div style={{ display: "grid", gridTemplateColumns: "70px 1fr 1fr 1fr 1fr 1fr 100px", gap: "4px 12px", fontSize: 10, color: C.g50, marginBottom: 8, textTransform: "uppercase", fontWeight: 600 }}>
-                    <span></span><span>Actual GS</span><span>Actual GM</span><span style={{ textAlign: "right" }}>Cum. GS</span><span style={{ textAlign: "right" }}>Cum. Pts</span><span style={{ textAlign: "right" }}>Target</span><span></span>
-                  </div>
-                  {calcs.annualReview.map((yr, i) => (
-                    <div key={i} style={{ display: "grid", gridTemplateColumns: "70px 1fr 1fr 1fr 1fr 1fr 100px", gap: "4px 12px", alignItems: "center", padding: "6px 0", borderBottom: `1px solid ${C.g05}` }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: C.g50 }}>Year {yr.year}</span>
-                      <input style={{ ...inp, textAlign: "right" }} type="number" value={yr.actualGS ?? ""} onChange={e => upAn(i, "actualGS", e.target.value)} placeholder="—" />
-                      <input style={{ ...inp, textAlign: "right" }} type="number" value={yr.actualGM ?? ""} onChange={e => upAn(i, "actualGM", e.target.value)} placeholder="—" />
-                      <span style={{ fontSize: 12, textAlign: "right", color: C.g70 }}>{yr.cumGS > 0 ? fmt(yr.cumGS) : "—"}</span>
-                      <span style={{ fontSize: 12, textAlign: "right", color: C.g70 }}>{yr.cumPoints > 0 ? fmtN(yr.cumPoints) : "—"}</span>
-                      <span style={{ fontSize: 12, textAlign: "right", color: C.g50 }}>{fmtN(yr.proRataTarget)}</span>
-                      <span>{yr.cumGS > 0 ? (yr.onTrack ? <Badge text="On Track" color="green" /> : <Badge text="Behind" color="red" />) : ""}</span>
-                    </div>
-                  ))}
-                </div>
-                {calcs.annualReview.some(r => r.actualGS > 0) && (
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
-                    <div style={crd}><Metric label="Total Actual GS"  value={fmt(calcs.annualReview[calcs.annualReview.length - 1]?.cumGS || 0)} big /></div>
-                    <div style={crd}><Metric label="Total Actual GM"  value={fmt(calcs.annualReview[calcs.annualReview.length - 1]?.cumGM || 0)} sub="← EY audit number" big /></div>
-                    <div style={crd}><Metric label="Cumulative Points" value={fmtN(calcs.annualReview[calcs.annualReview.length - 1]?.cumPoints || 0)} sub={`of ${fmtN(calcs.pointsNeeded)} needed`} big /></div>
-                  </div>
-                )}
-              </div>
-            )}
-
-          </div>
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-  </script>
 </body>
 </html>
