@@ -7,7 +7,7 @@
 <title>Air Mixing Intensity Guide — Enartis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
   (function(){
     function loadScript(urls, cb){
@@ -67,9 +67,9 @@
 --line-soft: #EEF0F2;
 
 /* Type */
---font-heading: 'Montserrat', 'Century Gothic', sans-serif;
+--font-heading: 'Open Sans', sans-serif;
 --font-body: 'Open Sans', sans-serif;
---font-mono: 'JetBrains Mono', monospace;
+--font-mono: 'Open Sans', sans-serif;
 ```
 
 }
@@ -140,7 +140,8 @@ padding: 9px 14px;
 border-radius: 4px;
 font-family: var(–font-body);
 font-size: 13px;
-min-width: 240px;
+width: 240px;
+max-width: 100%;
 transition: all 0.15s ease;
 }
 .project-input::placeholder { color: var(–muted); }
@@ -159,10 +160,15 @@ display: grid;
 grid-template-columns: 360px 1fr;
 gap: 28px;
 }
-@media (max-width: 960px) {
-.container { grid-template-columns: 1fr; padding: 18px; gap: 18px; }
-.header-inner { padding: 14px 18px; }
+/* Tablet: stack configurator above recipe */
+@media (max-width: 1100px) {
+.container { grid-template-columns: 1fr; padding: 20px; gap: 20px; }
+}
+@media (max-width: 720px) {
+.container { padding: 14px; gap: 14px; }
+.header-inner { padding: 14px 18px; gap: 12px; }
 .header-title { display: none; }
+.project-input { min-width: 0; flex: 1; }
 }
 
 .accent-block {
@@ -187,10 +193,7 @@ border: 1px solid var(–line);
 border-radius: 6px;
 padding: 24px;
 align-self: start;
-position: sticky;
-top: 20px;
 }
-@media (max-width: 960px) { .configurator { position: static; } }
 
 .config-title {
 font-family: var(–font-heading);
@@ -265,7 +268,7 @@ letter-spacing: 0.04em;
 }
 .seg-btn:hover { color: var(–blue-deep); }
 .seg-btn.active {
-background: var(–blue);
+background-color: #0076BD;
 color: white;
 box-shadow: 0 1px 2px rgba(0,118,189,0.25);
 }
@@ -324,6 +327,11 @@ font-family: var(–font-body);
 .summary-stats {
 display: flex;
 gap: 22px;
+flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+.summary-stats { gap: 14px; }
+.recipe-title { font-size: 19px; }
 }
 .stat {
 text-align: right;
@@ -362,6 +370,9 @@ padding: 14px;
 background: white;
 border: 1px solid var(–line);
 border-radius: 4px;
+}
+@media (max-width: 600px) {
+.timeline { grid-template-columns: repeat(3, 1fr); gap: 10px; }
 }
 .timeline-bar {
 height: 6px;
@@ -414,8 +425,10 @@ display: flex;
 align-items: center;
 gap: 14px;
 padding: 13px 18px;
-background: var(–blue);
+background-color: #0076BD;
 color: white;
+min-height: 52px;
+flex-wrap: wrap;
 }
 .phase-num {
 font-family: var(–font-heading);
@@ -473,8 +486,16 @@ display: grid;
 grid-template-columns: repeat(5, 1fr);
 gap: 0;
 }
-@media (max-width: 720px) {
+/* Tablet portrait: 3 columns */
+@media (max-width: 1100px) {
+.phase-body { grid-template-columns: repeat(3, 1fr); }
+.phase-cell:nth-child(3n) { border-right: none; }
+}
+/* Phone: 2 columns */
+@media (max-width: 600px) {
 .phase-body { grid-template-columns: repeat(2, 1fr); }
+.phase-cell:nth-child(3n) { border-right: 1px solid var(–line-soft); }
+.phase-cell:nth-child(2n) { border-right: none; }
 }
 
 .phase-cell {
@@ -483,9 +504,6 @@ border-right: 1px solid var(–line-soft);
 border-bottom: 1px solid var(–line-soft);
 }
 .phase-cell:last-child { border-right: none; }
-@media (max-width: 720px) {
-.phase-cell:nth-child(even) { border-right: none; }
-}
 
 .cell-label {
 font-family: var(–font-heading);
@@ -563,6 +581,10 @@ margin-top: 24px;
 padding-top: 20px;
 border-top: 1px solid var(–line);
 flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+.actions .btn { flex: 1 1 100%; }
+.btn-danger { margin-left: 0; }
 }
 .btn {
 padding: 11px 20px;
