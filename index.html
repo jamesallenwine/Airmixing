@@ -66,10 +66,10 @@
 --line: #E1E4E8;
 --line-soft: #EEF0F2;
 
-/* Type */
---font-heading: 'Open Sans', sans-serif;
---font-body: 'Open Sans', sans-serif;
---font-mono: 'Open Sans', sans-serif;
+/* Type — Open Sans with strong system-font fallback chain */
+--font-heading: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+--font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+--font-mono: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 ```
 
 }
@@ -106,12 +106,16 @@ flex-wrap: wrap;
 .brand {
 display: flex;
 flex-direction: column;
+align-items: flex-start;
 gap: 2px;
 }
 .brand-logo {
 height: 48px;
 width: auto;
+max-width: 100%;
 display: block;
+object-fit: contain;
+flex-shrink: 0;
 }
 .brand-tag {
 font-family: var(–font-heading);
