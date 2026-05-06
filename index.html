@@ -5,9 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Air Mixing Intensity Guide — Enartis</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
   (function(){
     function loadScript(urls, cb){
@@ -40,6 +37,42 @@
   })();
   </script>
 <style>
+  /* Self-hosted Open Sans — no third-party CDN dependency */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('fonts/open-sans-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('fonts/open-sans-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('fonts/open-sans-600.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('fonts/open-sans-700.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('fonts/open-sans-800.woff2') format('woff2');
+  }
   :root {
     /* Enartis brand */
     --blue: #0076BD;
@@ -1287,6 +1320,7 @@ function Phase({
     className: "cell-input",
     value: phase.duration,
     min: "0",
+    onFocus: e => e.target.select(),
     onChange: e => onUpdate(idx, 'duration', Number(e.target.value))
   }), /*#__PURE__*/React.createElement("div", {
     className: "cell-suffix"
@@ -1298,6 +1332,7 @@ function Phase({
     type: "number",
     className: "cell-input",
     value: phase.temp,
+    onFocus: e => e.target.select(),
     onChange: e => onUpdate(idx, 'temp', Number(e.target.value))
   }), /*#__PURE__*/React.createElement("div", {
     className: "cell-suffix"
@@ -1310,6 +1345,7 @@ function Phase({
     step: "0.1",
     className: "cell-input",
     value: phase.macroOx,
+    onFocus: e => e.target.select(),
     onChange: e => onUpdate(idx, 'macroOx', Number(e.target.value))
   }), /*#__PURE__*/React.createElement("div", {
     className: "cell-suffix"
@@ -1339,6 +1375,7 @@ function Phase({
     className: "cell-input",
     value: phase.hz,
     min: "0",
+    onFocus: e => e.target.select(),
     onChange: e => onUpdate(idx, 'hz', Number(e.target.value))
   }), /*#__PURE__*/React.createElement("div", {
     className: "cell-suffix"
@@ -1381,6 +1418,14 @@ function App() {
       };
       if (key === 'intensity') {
         updated.hz = hzFor(value, config.tankSize);
+      }
+      // If macroOx is set but no dose window exists, default to 24h
+      if (key === 'macroOx' && value > 0 && !updated.macroOxHours) {
+        updated.macroOxHours = 24;
+      }
+      // If macroOx is cleared to zero, also clear the dose window
+      if (key === 'macroOx' && value === 0) {
+        updated.macroOxHours = 0;
       }
       next[idx] = updated;
       return next;
